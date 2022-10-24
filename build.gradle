@@ -8,10 +8,14 @@
 
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
-    id 'application'
+//    id 'application'
     id 'org.springframework.boot' version '2.7.4'
     id "io.spring.dependency-management" version "1.0.14.RELEASE"
     id 'java'
+}
+
+jar {
+    enabled = false
 }
 
 allprojects {
@@ -43,7 +47,6 @@ dependencies {
 }
 
 group = 'ru.src'
-version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 //bootRun{
