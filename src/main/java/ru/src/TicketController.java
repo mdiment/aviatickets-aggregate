@@ -9,7 +9,7 @@ import javax.annotation.PostConstruct;
 @Controller
 public class TicketController {
 
-    @GetMapping("/v2")
+    @GetMapping("/")
     public String index1(){
         System.out.println("234234d");
         return "index_aviatickets";
