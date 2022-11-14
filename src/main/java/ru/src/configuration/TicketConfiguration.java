@@ -1,4 +1,4 @@
-package ru.src;
+package ru.src.configuration;
 
 
 import org.springframework.context.annotation.Bean;

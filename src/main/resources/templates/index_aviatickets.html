@@ -1,11 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Aviaflights</title>
 </head>
 <body>
-    <h1>Test123!!!</h1>
+<h1>Test123!!!</h1>
+<form action="#" th:action="@{flights}" th:object="${greeting}" method="post">
+    From:<input type="text" class="form-control" th:field="*{from}" />
+    To:<input type="text" th:field="*{to}" />
+    <input type="submit" value="Find" />
+</form>
+<div class="container" th:if="${greeting.getFlightsList != null}">
+    <div align="center" th:if="${not greeting.getFlightsList.isEmpty()}">
+        <h1>Flights Found:</h1>
+        <table>
+            <tr>
+                <td>flight num</td>
+                <td>departure time</td>
+                <td>arrival time</td>
+            </tr>
+            <tr th:each="flight: ${greeting.getFlightsList}">
+                <td th:text="${flight.getFlightNum()}"></td>
+                <td th:text="${flight.getDeparture()}"></td>
+                <td th:text="${flight.getArrival()}"></td>
+            </tr>
+        </table>
+    </div>
+    <div th:if="${greeting.getFlightsList.isEmpty()}">
+        You don't have any flights
+    </div>
+</div>
+
 </body>
 </html>
 
