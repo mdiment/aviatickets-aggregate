@@ -2,17 +2,46 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Aviaflights</title>
+    <title>Aviatickets</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet">
 </head>
 <body>
-<h1>Test123!!!</h1>
-<form action="#" th:action="@{flights}" th:object="${greeting}" method="post">
-    From:<input type="text" class="form-control" th:field="*{from}" />
-    To:<input type="text" th:field="*{to}" />
-    <input type="submit" value="Find" />
-</form>
-<div class="container" th:if="${greeting.getFlightsList != null}">
-    <div align="center" th:if="${not greeting.getFlightsList.isEmpty()}">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/}">Aviatickets</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <table>
+                        <tr>
+                            <td><a class="nav-link active" aria-current="page" th:href="@{/register}">Register</a></td>
+                            <td><a class="nav-link active" aria-current="page" th:href="@{/login}">Login</a></td>
+                        </tr>
+                    </table>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<br/>
+<div class="container">
+    <div align="left">
+        <form action="#" th:action="@{flights}" th:object="${greeting}" method="post">
+            <table>
+                <tr>From:<input type="text" th:field="*{from}" /></tr>
+                <tr>To:<input type="text" th:field="*{to}" /></tr>
+                <tr><input type="submit" value="Find" /></tr>
+            </table>
+        </form>
+    </div>
+</div>
+
+<div class="container" th:if="${flights != null}">
+    <div align="center" th:if="${not flights.isEmpty()}">
         <h1>Flights Found:</h1>
         <table>
             <tr>
@@ -20,14 +49,14 @@
                 <td>departure time</td>
                 <td>arrival time</td>
             </tr>
-            <tr th:each="flight: ${greeting.getFlightsList}">
+            <tr th:each="flight: ${flights}">
                 <td th:text="${flight.getFlightNum()}"></td>
                 <td th:text="${flight.getDeparture()}"></td>
                 <td th:text="${flight.getArrival()}"></td>
             </tr>
         </table>
     </div>
-    <div th:if="${greeting.getFlightsList.isEmpty()}">
+    <div th:if="${flights.isEmpty()}">
         You don't have any flights
     </div>
 </div>

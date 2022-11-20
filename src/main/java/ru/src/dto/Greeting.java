@@ -13,6 +13,6 @@ public class Greeting {
 
     private String from;
     private String to;
-    private List<Flight> flightsList;
+//    private List<Flight> flightsList;
 
 }

@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface FlightService {
 
-    public abstract List<Flight> geFlights(Greeting greeting);
+    List<Flight> geFlights(Greeting greeting);
 }

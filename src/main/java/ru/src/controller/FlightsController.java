@@ -4,9 +4,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import ru.src.dto.Flight;
 import ru.src.dto.Greeting;
-import ru.src.dto.User;
 import ru.src.service.FlightService;
+
+import java.util.List;
 
 //import javax.annotation.PostConstruct;
 
@@ -26,17 +28,18 @@ public class FlightsController {
         return "index_aviatickets";
     }
 
-    @GetMapping("/registration")
-    public String getRegistration(Model model) {
-        model.addAttribute("user", new User());
-        return "registration";
-    }
+//    @GetMapping("/registration")
+//    public String getRegistration(Model model) {
+//        model.addAttribute("user", new User());
+//        return "registration";
+//    }
 
     @PostMapping("/flights")
     public ModelAndView getTickets(@ModelAttribute("flight") Greeting greeting) {
         ModelAndView view = new ModelAndView("index_aviatickets");
-        greeting.setFlightsList(flightService.geFlights(greeting));
+        List<Flight> flights = flightService.geFlights(greeting);
         view.addObject("greeting", greeting);
+        view.addObject("flights", flights);
         return view;
     }
 
