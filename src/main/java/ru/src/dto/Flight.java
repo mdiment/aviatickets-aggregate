@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class Flight {
 
+    private Integer id;
     private String flightNum;
     private Timestamp arrival;
     private Timestamp departure;

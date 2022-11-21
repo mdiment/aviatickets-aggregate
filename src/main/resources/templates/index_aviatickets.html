@@ -25,6 +25,10 @@
                 </li>
             </ul>
         </div>
+        <span class="navbar-text" th:if="${user != null}">
+            <span>Hello, <span th:text="${user.getEmail()}"></span>!</span>
+        </span>
+        <span class="navbar-text" th:if="${user == null}">Hello!</span>
     </div>
 </nav>
 <br/>
@@ -32,8 +36,8 @@
     <div align="left">
         <form action="#" th:action="@{flights}" th:object="${greeting}" method="post">
             <table>
-                <tr>From:<input type="text" th:field="*{from}" /></tr>
-                <tr>To:<input type="text" th:field="*{to}" /></tr>
+                <tr>From:<input type="text" th:field="*{from}" th:value="SVO"/></tr>
+                <tr>To:<input type="text" th:field="*{to}" th:value="LED"/></tr>
                 <tr><input type="submit" value="Find" /></tr>
             </table>
         </form>
@@ -43,16 +47,18 @@
 <div class="container" th:if="${flights != null}">
     <div align="center" th:if="${not flights.isEmpty()}">
         <h1>Flights Found:</h1>
-        <table>
+        <table class="table table-striped">
             <tr>
-                <td>flight num</td>
-                <td>departure time</td>
-                <td>arrival time</td>
+                <th scope="col">flight num</th>
+                <th scope="col">departure time</th>
+                <th scope="col">arrival time</th>
+                <th scope="col">info</th>
             </tr>
             <tr th:each="flight: ${flights}">
                 <td th:text="${flight.getFlightNum()}"></td>
                 <td th:text="${flight.getDeparture()}"></td>
                 <td th:text="${flight.getArrival()}"></td>
+                <td><a th:href="@{/flight-info/{flightId}(flightId=${flight.getId()})}" th:methods="GET" >Info</a></td>
             </tr>
         </table>
     </div>
