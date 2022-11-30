@@ -4,14 +4,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.DigestUtils;
 import ru.src.dto.FlightInfo;
 import ru.src.dto.Greeting;
 import ru.src.dto.Flight;
 import ru.src.dto.Ticket;
+import ru.src.model.entity.Booking;
+import ru.src.model.entity.User;
+import ru.src.model.repository.BookingRepository;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
+
+import static java.lang.Integer.parseInt;
 
 @Slf4j
 @Repository
@@ -21,11 +27,13 @@ public class FlightDaoImpl implements FlightDao {
             "select flight_id,\n" +
                     "   flight_no, \n" +
                     "   scheduled_departure, \n" +
-                    "   scheduled_arrival \n" +
-                    "from bookings.flights \n" +
-                    "where departure_airport = :from \n" +
-                    "   and arrival_airport = :to \n" +
-                    "order by scheduled_departure desc, \n" +
+                    "   scheduled_arrival, \n" +
+                    "   scheduled_duration \n" +
+                    "from bookings.flights_v \n" +
+                    "where departure_city = :from \n" +
+                    "   and arrival_city = :to \n" +
+                    "   and status = 'Scheduled' \n" +
+                    "order by scheduled_departure ASC, \n" +
                     "   scheduled_arrival desc, \n" +
                     "   flight_id \n" +
                     "limit 20 \n";
@@ -45,6 +53,9 @@ public class FlightDaoImpl implements FlightDao {
 
     @Autowired
     NamedParameterJdbcOperations jdbcOperations;
+
+    @Autowired
+    BookingRepository bookingRepository;
 
     @Override
     public List<Flight> getFlights(Greeting greeting) {
@@ -71,6 +82,17 @@ public class FlightDaoImpl implements FlightDao {
 
             Timestamp departure = (Timestamp) row.get("scheduled_departure");
             flight.setDeparture(departure);
+
+//            PGInterval duration;
+//            try {
+//                log.info(row.get("scheduled_duration").toString());
+            String duration = row.get("scheduled_duration").toString();
+//            }
+//            catch(java.sql.SQLException exception){
+//                duration = new PGInterval();
+//                log.info(exception.toString());
+//            }
+            flight.setDuration(duration);
 
             result.add(flight);
         }
@@ -103,8 +125,36 @@ public class FlightDaoImpl implements FlightDao {
         }
         flightInfo.setTickets(result);
         List<Map<String, Object>> queryModel = jdbcOperations.queryForList(FIND_FLIGHT, params);
-
+        flightInfo.setFlightId(parseInt(queryModel.get(0).get("flight_id").toString()));
         flightInfo.setModel(queryModel.get(0).get("model").toString());
         return flightInfo;
+    }
+
+    @Override
+    public void makeOrder(Integer flightId, String fareConditions, User user) {
+        log.info(flightId + " fare " + fareConditions);
+        String book_ref = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+        double amount = Objects.equals(fareConditions, "Economy") ? 3000.00 : 18000.00;
+        Booking booking = new Booking(book_ref,
+                Timestamp.valueOf(LocalDateTime.now()),
+                amount,
+                user.getId());
+        user.getBookings().add(booking);
+        bookingRepository.save(booking);
+        Map<String, Object> params_ticket = new HashMap<>();
+        String ticket_no = UUID.randomUUID().toString().substring(0, 13).toUpperCase();
+        params_ticket.put("ticket_no", ticket_no);
+        params_ticket.put("book_ref", book_ref);
+        params_ticket.put("passenger_id", user.getId());
+        params_ticket.put("passenger_name", user.getEmail());
+        jdbcOperations.update("INSERT INTO bookings.tickets (ticket_no, book_ref, passenger_id, passenger_name)\n" +
+                "VALUES(:ticket_no, :book_ref, :passenger_id, :passenger_name);",
+                params_ticket);
+        params_ticket.put("flight_id", flightId);
+        params_ticket.put("fare_conditions", fareConditions);
+        params_ticket.put("amount", amount);
+        jdbcOperations.update("INSERT INTO ticket_flights (ticket_no, flight_id, fare_conditions, amount)\n" +
+                        "        VALUES      (:ticket_no, :flight_id, :fare_conditions, :amount);",
+                params_ticket);
     }
 }

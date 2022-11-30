@@ -39,7 +39,7 @@ public class AuthController {
     }
 
     @RequestMapping("/login/{flightId}")
-    public String login(@RequestParam Integer flightId){
+    public String login(@PathVariable Integer flightId){
         log.info("login_from_flight_info, flightId: " + flightId);
         return "login";
     }
@@ -70,6 +70,16 @@ public class AuthController {
 
         userService.saveUser(userDto);
         return "redirect:/register?success";
+    }
+
+    @GetMapping("/personal")
+    public String showOrders(Model model){
+        log.info("personal");
+        if (sessionContext.getUser() == null){
+            return "redirect:/login";
+        }
+        model.addAttribute("orders", sessionContext.getUser().getBookings());
+        return "personal";
     }
 
 }

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -32,34 +33,31 @@
     </div>
 </nav>
 <br/>
-<div class="container" th:if="${flightInfo != null}">
-    <div align="left" th:if="${flightInfo.getModel() != null}">
-        <span>Model of the plane: <span th:text="${flightInfo.getModel()}"></span></span>
-    </div>
-    <div align="center" th:if="${not flightInfo.getTickets().isEmpty()}">
+<div class="container" th:if="${orders != null}">
+<!--    <div align="left" th:if="${flightInfo.getModel() != null}">-->
+<!--        <span>Model of the plane: <span th:text="${flightInfo.getModel()}"></span></span>-->
+<!--    </div>-->
+    <div align="center" th:if="${not orders.isEmpty()}">
         <h1>Tickets found:</h1>
         <table class="table">
             <tr>
-                <th scope="col">Fare Conditions</th>
-                <th scope="col">Available tickets</th>
+                <th scope="col">Book number</th>
+                <th scope="col">Date of booking</th>
+                <th scope="col">Total sum of booking</th>
             </tr>
-            <tr th:each="ticket: ${flightInfo.getTickets()}">
-                <td><a th:href="@{/order/{flightId}/{fareConditions}(flightId=${flightInfo.getFlightId()},fareConditions=${ticket.getFareConditions()})}"
-                       th:methods="POST"
-                       th:text="${ticket.getFareConditions()}">
-                    </a>
-                </td>
-                <td th:text="${ticket.getCount()}"></td>
+            <tr th:each="order: ${orders}">
+                <td th:text="${order.getBookRef()}"></td>
+                <td th:text="${order.getBook_date()}"></td>
+                <td th:text="${order.getTotal_amount()}"></td>
             </tr>
         </table>
     </div>
-    <div align="center" th:if="${flightInfo.getTickets.isEmpty()}">
-        No available tickets found!
+    <div align="center" th:if="${orders.isEmpty()}">
+        No orders found! You should book some!
     </div>
 </div>
 <div th:if="${flightInfo == null}">
     ERROR
 </div>
-
 </body>
 </html>

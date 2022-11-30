@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class FlightInfo {
 
+    private Integer flightId;
     private List<Ticket> tickets;
     private String model;
 }

@@ -51,14 +51,16 @@
             <tr>
                 <th scope="col">flight num</th>
                 <th scope="col">departure time</th>
+                <th scope="col">duration</th>
                 <th scope="col">arrival time</th>
-                <th scope="col">info</th>
+<!--                <th scope="col">info</th>-->
             </tr>
             <tr th:each="flight: ${flights}">
-                <td th:text="${flight.getFlightNum()}"></td>
+                <td><a th:href="@{/flight-info/{flightId}(flightId=${flight.getId()})}" th:methods="GET" th:text="${flight.getFlightNum()}"/></td>
                 <td th:text="${flight.getDeparture()}"></td>
+                <td th:text="${flight.getDuration()}"></td>
                 <td th:text="${flight.getArrival()}"></td>
-                <td><a th:href="@{/flight-info/{flightId}(flightId=${flight.getId()})}" th:methods="GET" >Info</a></td>
+<!--                <td>Info</a></td>-->
             </tr>
         </table>
     </div>

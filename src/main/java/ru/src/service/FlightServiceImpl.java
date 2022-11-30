@@ -6,7 +6,7 @@ import ru.src.dao.FlightDao;
 import ru.src.dto.FlightInfo;
 import ru.src.dto.Greeting;
 import ru.src.dto.Flight;
-import ru.src.dto.Ticket;
+import ru.src.model.entity.User;
 
 import java.util.List;
 
@@ -22,6 +22,13 @@ public class FlightServiceImpl implements FlightService {
     }
     public FlightInfo getTickets(Integer flightId){
         return flightDao.getTickets(flightId);
-    };
+    }
+
+    @Override
+    public void makeOrder(Integer flightId, String fareConditions, User user) {
+        flightDao.makeOrder(flightId, fareConditions, user);
+    }
+
+    ;
 
 }

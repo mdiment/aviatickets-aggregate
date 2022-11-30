@@ -18,9 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Objects;
 
-//import javax.annotation.PostConstruct;
-
-
 @Controller
 @Slf4j
 public class FlightsController {
@@ -33,23 +30,12 @@ public class FlightsController {
         this.flightService = flightService;
     }
 
-
     @GetMapping("/")
     public String index1(Model model){
-//        String ans = "Hello!";
-//        if (sessionContext.getUser() != null){
-//            ans = "Hello, " + sessionContext.getUser().getEmail() + "!";
-//        }
         model.addAttribute("user", sessionContext.getUser());
         model.addAttribute("greeting", new Greeting());
         return "index_aviatickets";
     }
-
-//    @GetMapping("/registration")
-//    public String getRegistration(Model model) {
-//        model.addAttribute("user", new User());
-//        return "registration";
-//    }
 
     @PostMapping("/flights")
     public ModelAndView getTickets(@ModelAttribute("flight") Greeting greeting) {
@@ -61,29 +47,28 @@ public class FlightsController {
         return view;
     }
 
-    @GetMapping("/order")
-    public String makeOrder() {
+    @RequestMapping("/order/{flightId}/{fareConditions}")
+    public String makeOrder(@PathVariable Integer flightId,
+                            @PathVariable String fareConditions) {
+        log.info("order " + flightId.toString() + " fare conditions " + fareConditions);
         ModelAndView view = new ModelAndView("index_aviatickets");
         if(sessionContext.getUser() == null){
-            return "redirect:/login?flightId";
+            return "redirect:/login/" + flightId;
         }
-        return "redirect:/";
+
+        flightService.makeOrder(flightId, fareConditions, sessionContext.getUser());
+        return "redirect:/personal";
     }
 
     @RequestMapping("/flight-info/{flightId}")
     public ModelAndView getFlightInfo(@PathVariable Integer flightId){
         log.info("info about: " + flightId.toString());
-//        HttpServletResponse httpServletResponse;
-//        httpServletResponse.addCookie(new Cookie("dskjdksjd", "slkdlsklds"));
         ModelAndView view = new ModelAndView("flight");
         FlightInfo flightInfo = flightService.getTickets(flightId);
         view.addObject("user", sessionContext.getUser());
         view.addObject("flightInfo", flightInfo);
         return view;
     }
-//    @PostConstruct
-//    public String sadas(){
-////        System.out.println(2132);
-//        return "123";
-//    }
+
+
 }
