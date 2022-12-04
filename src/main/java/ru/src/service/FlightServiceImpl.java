@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.src.dao.FlightDao;
 import ru.src.dto.FlightInfo;
-import ru.src.dto.Greeting;
+import ru.src.dto.Search;
 import ru.src.dto.Flight;
 import ru.src.model.entity.User;
 
@@ -17,8 +17,8 @@ public class FlightServiceImpl implements FlightService {
     private FlightDao flightDao;
 
     @Override
-    public List<Flight> getFlights(Greeting greeting) {
-        return flightDao.getFlights(greeting);
+    public List<Flight> getFlights(Search search) {
+        return flightDao.getFlights(search);
     }
     public FlightInfo getTickets(Integer flightId){
         return flightDao.getTickets(flightId);

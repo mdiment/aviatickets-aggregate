@@ -32,37 +32,39 @@
     </div>
 </nav>
 <br/>
-<div th:if="${param.error}">
-    <div class="alert alert-info">Too many bookings for one user!</div>
-</div>
-<br/>
-<div class="container" th:if="${flightInfo != null}">
-    <div align="left" th:if="${flightInfo.getModel() != null}">
-        <span>Model of the plane: <span th:text="${flightInfo.getModel()}"></span></span>
-    </div>
-    <div align="center" th:if="${not flightInfo.getTickets().isEmpty()}">
-        <h1>Tickets found:</h1>
-        <table class="table">
+<div class="container" th:if="${statistics != null}">
+    <div align="center" th:if="${not statistics.isEmpty()}">
+        <h1>Statistics for Aviatickets:</h1>
+        <div>
+            <p class="fs-3 text">Overall Aviatickets users registered: <span class="fw-bold" th:text="${statistics.size()}"></span></p>
+        </div>
+        <table class="table table-striped">
             <tr>
-                <th scope="col">Fare Conditions</th>
-                <th scope="col">Available tickets</th>
+                <th scope="col">User</th>
+                <th scope="col">User roles</th>
+                <th scope="col">User bookings</th>
             </tr>
-            <tr th:each="ticket: ${flightInfo.getTickets()}">
-                <td><a th:href="@{/order/{flightId}/{fareConditions}(flightId=${flightInfo.getFlightId()},fareConditions=${ticket.getFareConditions()})}"
-                       th:methods="POST"
-                       th:text="${ticket.getFareConditions()}">
-                    </a>
+            <tr th:each="row : ${statistics}">
+                <td><a th:href="@{/}" th:methods="GET" th:text="${row.getUser().getEmail()}"/></td>
+                <td th:text="${row.getRoles()}"></td>
+                <td>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>Booking</th>
+                            <th>Booking date</th>
+                        </tr>
+                        <tr th:each="booking : ${row.getBookings()}">
+                            <td th:text="${booking.getBookRef()}"></td>
+                            <td th:text="${booking.getBook_date()}"></td>
+                        </tr>
+                    </table>
                 </td>
-                <td th:text="${ticket.getCount()}"></td>
             </tr>
         </table>
     </div>
-    <div align="center" th:if="${flightInfo.getTickets.isEmpty()}">
-        No available tickets found!
+    <div th:if="${statistics.isEmpty()}">
+        DB problem
     </div>
-</div>
-<div th:if="${flightInfo == null}">
-    ERROR
 </div>
 
 </body>

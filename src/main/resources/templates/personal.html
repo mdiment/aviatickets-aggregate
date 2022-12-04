@@ -19,26 +19,23 @@
                 <li class="nav-item">
                     <table>
                         <tr>
-                            <td><a class="nav-link active" aria-current="page" th:href="@{/register}">Register</a></td>
-                            <td><a class="nav-link active" aria-current="page" th:href="@{/login}">Login</a></td>
+                            <td><a class="nav-link active" aria-current="page" th:href="@{/login}">SignUp</a></td>
+                            <td th:if="${user}"><a class="nav-link active" aria-current="page" th:href="@{/logout}">Logout</a></td>
                         </tr>
                     </table>
                 </li>
             </ul>
         </div>
-        <span class="navbar-text" th:if="${user != null}">
-            <span>Hello, <span th:text="${user.getEmail()}"></span>!</span>
+        <span class="navbar-text" th:if="${user}">
+            <span>Hello, <a th:href="@{/personal}" th:methods="POST" th:text="${user.getEmail()}"/>!</span>
         </span>
         <span class="navbar-text" th:if="${user == null}">Hello!</span>
     </div>
 </nav>
 <br/>
 <div class="container" th:if="${orders != null}">
-<!--    <div align="left" th:if="${flightInfo.getModel() != null}">-->
-<!--        <span>Model of the plane: <span th:text="${flightInfo.getModel()}"></span></span>-->
-<!--    </div>-->
     <div align="center" th:if="${not orders.isEmpty()}">
-        <h1>Tickets found:</h1>
+        <h1>Your bookings:</h1>
         <table class="table">
             <tr>
                 <th scope="col">Book number</th>
@@ -56,7 +53,7 @@
         No orders found! You should book some!
     </div>
 </div>
-<div th:if="${flightInfo == null}">
+<div th:if="${orders == null}">
     ERROR
 </div>
 </body>

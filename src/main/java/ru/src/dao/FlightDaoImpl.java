@@ -4,9 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.DigestUtils;
 import ru.src.dto.FlightInfo;
-import ru.src.dto.Greeting;
+import ru.src.dto.Search;
 import ru.src.dto.Flight;
 import ru.src.dto.Ticket;
 import ru.src.model.entity.Booking;
@@ -32,6 +31,7 @@ public class FlightDaoImpl implements FlightDao {
                     "from bookings.flights_v \n" +
                     "where departure_city = :from \n" +
                     "   and arrival_city = :to \n" +
+                    "   and scheduled_departure::date >= :searchDate::date\n" +
                     "   and status = 'Scheduled' \n" +
                     "order by scheduled_departure ASC, \n" +
                     "   scheduled_arrival desc, \n" +
@@ -58,12 +58,13 @@ public class FlightDaoImpl implements FlightDao {
     BookingRepository bookingRepository;
 
     @Override
-    public List<Flight> getFlights(Greeting greeting) {
-        log.info(greeting.toString());
+    public List<Flight> getFlights(Search search) {
+        log.info(search.toString());
 
         Map<String, Object> params = new HashMap<>();
-        params.put("from", greeting.getFrom());
-        params.put("to", greeting.getTo());
+        params.put("from", search.getFrom());
+        params.put("to", search.getTo());
+        params.put("searchDate", search.getDate());
 
         List<Map<String, Object>> queryResult = jdbcOperations.queryForList(FIND_TICKETS, params);
         List<Flight> result = new ArrayList<>();
@@ -83,15 +84,7 @@ public class FlightDaoImpl implements FlightDao {
             Timestamp departure = (Timestamp) row.get("scheduled_departure");
             flight.setDeparture(departure);
 
-//            PGInterval duration;
-//            try {
-//                log.info(row.get("scheduled_duration").toString());
             String duration = row.get("scheduled_duration").toString();
-//            }
-//            catch(java.sql.SQLException exception){
-//                duration = new PGInterval();
-//                log.info(exception.toString());
-//            }
             flight.setDuration(duration);
 
             result.add(flight);
@@ -138,7 +131,7 @@ public class FlightDaoImpl implements FlightDao {
         Booking booking = new Booking(book_ref,
                 Timestamp.valueOf(LocalDateTime.now()),
                 amount,
-                user.getId());
+                user);
         user.getBookings().add(booking);
         bookingRepository.save(booking);
         Map<String, Object> params_ticket = new HashMap<>();

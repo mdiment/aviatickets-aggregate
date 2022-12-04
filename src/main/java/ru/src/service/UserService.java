@@ -6,7 +6,7 @@ import ru.src.model.entity.User;
 import java.util.List;
 
 public interface UserService {
-    void saveUser(UserDto userDto);
+    void saveUserAdmin(UserDto userDto);
 
     User findUserByEmail(String email);
 

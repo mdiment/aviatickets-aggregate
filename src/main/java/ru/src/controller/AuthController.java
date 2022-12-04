@@ -8,11 +8,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.src.configuration.SessionContext;
+import ru.src.dto.Search;
 import ru.src.dto.UserDto;
 import ru.src.model.entity.User;
 import ru.src.service.UserService;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller(value = "registration")
@@ -21,8 +21,10 @@ import javax.validation.Valid;
 public class AuthController {
 
     private final UserService userService;
+
     @Autowired
     SessionContext sessionContext;
+
     public AuthController(UserService userService) {
         this.userService = userService;
     }
@@ -68,7 +70,7 @@ public class AuthController {
             return "redirect:/register?error";
         }
 
-        userService.saveUser(userDto);
+        userService.saveUserAdmin(userDto);
         return "redirect:/register?success";
     }
 
@@ -78,8 +80,8 @@ public class AuthController {
         if (sessionContext.getUser() == null){
             return "redirect:/login";
         }
+        model.addAttribute("user", sessionContext.getUser());
         model.addAttribute("orders", sessionContext.getUser().getBookings());
         return "personal";
     }
-
 }

@@ -27,9 +27,6 @@ public class Booking {
     @Column
     private double total_amount;
 
-    @Column
-    private Long user_id;
-
-//    @ManyToOne
-//    private User user = new User();
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private User user;
 }
