@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Ticket {
+public class TicketDto {
     private Integer count;
     private String fareConditions;
 }

@@ -12,6 +12,6 @@ import java.util.List;
 public class FlightInfo {
 
     private Integer flightId;
-    private List<Ticket> tickets;
+    private List<TicketDto> ticketDtos;
     private String model;
 }

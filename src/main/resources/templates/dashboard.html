@@ -34,9 +34,9 @@
 <br/>
 <div class="container" th:if="${statistics != null}">
     <div align="center" th:if="${not statistics.isEmpty()}">
-        <h1>Statistics for Aviatickets:</h1>
+        <h1>Aviatickets Statistics:</h1>
         <div>
-            <p class="fs-3 text">Overall Aviatickets users registered: <span class="fw-bold" th:text="${statistics.size()}"></span></p>
+            <p class="fs-3 text">Users summary: <span class="fw-bold" th:text="${statistics.size()}"></span></p>
         </div>
         <table class="table table-striped">
             <tr>

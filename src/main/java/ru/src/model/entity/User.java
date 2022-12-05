@@ -7,6 +7,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -39,15 +40,9 @@ public class User {
     )
     private List<Role> roles = new ArrayList<>();
 
-    @LazyCollection(LazyCollectionOption.FALSE)
+//    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
-//    @JoinTable(
-//            name = "user_bookings",
-//            schema = "registration",
-//            joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") },
-//            inverseJoinColumns = { @JoinColumn(name = "book_ref", referencedColumnName = "book_ref") }
-//    )
-    private List<Booking> bookings = new ArrayList<>();
+    private Collection<Booking> bookings;
 
     @Override
     public boolean equals(Object o) {

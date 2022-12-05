@@ -3,14 +3,13 @@ package ru.src.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.postgresql.util.PGInterval;
 
 import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Flight {
+public class FlightDto {
 
     private Integer id;
     private String flightNum;

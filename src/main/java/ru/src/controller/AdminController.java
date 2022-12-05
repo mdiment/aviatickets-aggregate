@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 import ru.src.configuration.SessionContext;
 import ru.src.dto.Dashboard;
-import ru.src.dto.UserWithBookings;
+import ru.src.dto.UserWithBookingsDto;
 import ru.src.model.entity.Role;
 import ru.src.model.entity.User;
 import ru.src.model.repository.BookingRepository;
@@ -35,17 +35,17 @@ public class AdminController {
         modelAndView.addObject("user", sessionContext.getUser());
 
         List<User> users = userRepository.findAll();
-        List<UserWithBookings> statistics = new ArrayList<>();
+        List<UserWithBookingsDto> statistics = new ArrayList<>();
         for(User user : users){
             List<String> roles = new ArrayList<>();
             for (Role role : user.getRoles())
                 roles.add(role.getName());
 
-            UserWithBookings userWithBookings = new UserWithBookings(user,
+            UserWithBookingsDto userWithBookingsDto = new UserWithBookingsDto(user,
                     roles,
                     bookingRepository.findAllByUser(user)
             );
-            statistics.add(userWithBookings);
+            statistics.add(userWithBookingsDto);
         }
         Dashboard dashboard = new Dashboard(statistics);
 

@@ -32,13 +32,16 @@ public class SpringSecurity {
                 .authorizeRequests()
                 .antMatchers("/register/**").permitAll()
                 .antMatchers("/index").permitAll()
-                .antMatchers("/personal").hasRole("ADMIN")
-                .antMatchers("/orders").hasRole("ADMIN")
+                .antMatchers("/personal/**").authenticated()
+                .antMatchers("/order/**").permitAll()
+                .antMatchers("/flights/**").permitAll()
+                .antMatchers("/flight-info/**").permitAll()
                 .and()
                 .formLogin(
                         form -> form
                                 .loginPage("/login.html")
                                 .loginProcessingUrl("/login")
+                                .failureUrl("/login?error")
                                 .successHandler(myAuthenticationSuccessHandler())
                                 .permitAll()
                 ).logout(

@@ -1,5 +1,6 @@
 package ru.src.controller;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -8,26 +9,36 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.src.configuration.SessionContext;
-import ru.src.dto.Search;
 import ru.src.dto.UserDto;
+import ru.src.model.entity.Booking;
 import ru.src.model.entity.User;
+import ru.src.model.repository.BookingRepository;
+import ru.src.model.repository.UserRepository;
 import ru.src.service.UserService;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.Collection;
+import java.util.List;
 
 @Controller(value = "registration")
 @Slf4j
 @Scope("session")
+@AllArgsConstructor
 public class AuthController {
 
     private final UserService userService;
 
+//    @Autowired
+    private final BookingRepository bookingRepository;
+    private final UserRepository userRepository;
+
     @Autowired
     SessionContext sessionContext;
 
-    public AuthController(UserService userService) {
-        this.userService = userService;
-    }
+//    public AuthController(UserService userService) {
+//        this.userService = userService;
+//    }
 
     @GetMapping("/registration")
     public String index(){
@@ -45,6 +56,7 @@ public class AuthController {
         log.info("login_from_flight_info, flightId: " + flightId);
         return "login";
     }
+
     @GetMapping("/register")
     public String showRegistrationForm(Model model){
         log.info("register");
@@ -82,6 +94,31 @@ public class AuthController {
         }
         model.addAttribute("user", sessionContext.getUser());
         model.addAttribute("orders", sessionContext.getUser().getBookings());
+        return "personal";
+    }
+
+    @Transactional
+    @RequestMapping("/personal/delete/{bookRef}")
+    public String deleteOrder(@PathVariable String bookRef,
+                        Model model){
+        log.info("delete bookRef: " + bookRef);
+        User user = sessionContext.getUser();
+        if (user == null){
+            return "redirect:/";
+        }
+        Booking booking = bookingRepository.findByBookRef(bookRef);
+        User user1 = bookingRepository.findByBookRef(bookRef).getUser();
+        boolean test = user1.equals(user);
+
+        if(test){
+            user1.getBookings().remove(booking);
+            userRepository.saveAndFlush(user1);
+            bookingRepository.delete(booking);
+            sessionContext.setUser(user1);
+        }
+
+        model.addAttribute("user", user1);
+        model.addAttribute("orders", user1.getBookings());
         return "personal";
     }
 }

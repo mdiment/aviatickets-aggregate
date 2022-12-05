@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import ru.src.model.entity.Booking;
 import ru.src.model.entity.User;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 
@@ -12,6 +13,8 @@ import java.util.List;
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     Booking findByBookRef(String book_ref);
+
+    void deleteByBookRef(String book_ref);
 
     List<Booking> findAllByUser(User user);
 }

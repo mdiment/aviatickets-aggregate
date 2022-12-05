@@ -41,17 +41,20 @@
                 <th scope="col">Book number</th>
                 <th scope="col">Date of booking</th>
                 <th scope="col">Total sum of booking</th>
+                <th scope="col">Remove booking</th>
             </tr>
             <tr th:each="order: ${orders}">
                 <td th:text="${order.getBookRef()}"></td>
                 <td th:text="${order.getBook_date()}"></td>
                 <td th:text="${order.getTotal_amount()}"></td>
+                <td><a th:href="@{/personal/delete/{bookRef}(bookRef=${order.getBookRef()})}" th:methods="DELETE" class="text-danger">X</a></td>
             </tr>
         </table>
     </div>
     <div align="center" th:if="${orders.isEmpty()}">
         No orders found! You should book some!
     </div>
+    <a th::href="@{/}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">New booking</a>
 </div>
 <div th:if="${orders == null}">
     ERROR

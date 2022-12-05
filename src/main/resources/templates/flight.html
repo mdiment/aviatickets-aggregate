@@ -40,24 +40,24 @@
     <div align="left" th:if="${flightInfo.getModel() != null}">
         <span>Model of the plane: <span th:text="${flightInfo.getModel()}"></span></span>
     </div>
-    <div align="center" th:if="${not flightInfo.getTickets().isEmpty()}">
+    <div align="center" th:if="${not flightInfo.getTicketDtos().isEmpty()}">
         <h1>Tickets found:</h1>
         <table class="table">
             <tr>
                 <th scope="col">Fare Conditions</th>
                 <th scope="col">Available tickets</th>
             </tr>
-            <tr th:each="ticket: ${flightInfo.getTickets()}">
-                <td><a th:href="@{/order/{flightId}/{fareConditions}(flightId=${flightInfo.getFlightId()},fareConditions=${ticket.getFareConditions()})}"
+            <tr th:each="ticketDto: ${flightInfo.getTicketDtos()}">
+                <td><a th:href="@{/order/{flightId}/{fareConditions}(flightId=${flightInfo.getFlightId()},fareConditions=${ticketDto.getFareConditions()})}"
                        th:methods="POST"
-                       th:text="${ticket.getFareConditions()}">
+                       th:text="${ticketDto.getFareConditions()}">
                     </a>
                 </td>
-                <td th:text="${ticket.getCount()}"></td>
+                <td th:text="${ticketDto.getCount()}"></td>
             </tr>
         </table>
     </div>
-    <div align="center" th:if="${flightInfo.getTickets.isEmpty()}">
+    <div align="center" th:if="${flightInfo.getTicketDtos.isEmpty()}">
         No available tickets found!
     </div>
 </div>

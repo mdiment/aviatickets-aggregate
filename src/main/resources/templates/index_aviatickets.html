@@ -34,7 +34,7 @@
 <br/>
 <div class="container">
     <div align="left">
-        <form action="#" th:action="@{flights}" th:object="${search}" method="post">
+        <form action="#" th:action="@{flights}" th:object="${searchDto}" method="post">
             <table>
                 <tr>
                     <td>From:<input type="text" th:field="*{from}"/></td>
@@ -51,27 +51,27 @@
     </div>
 </div>
 
-<div class="container" th:if="${flights != null}">
-    <div align="center" th:if="${not flights.isEmpty()}">
+<div class="container" th:if="${flightDtos != null}">
+    <div align="center" th:if="${not flightDtos.isEmpty()}">
         <h1>Flights Found:</h1>
         <table class="table table-striped">
             <tr>
-                <th scope="col">flight num</th>
+                <th scope="col">flightDto num</th>
                 <th scope="col">departure time</th>
                 <th scope="col">duration</th>
                 <th scope="col">arrival time</th>
             </tr>
-            <tr th:each="flight: ${flights}">
-                <td><a th:href="@{/flight-info/{flightId}(flightId=${flight.getId()})}" th:methods="GET" th:text="${flight.getFlightNum()}"/></td>
-                <td th:text="${flight.getDeparture()}"></td>
-                <td th:text="${flight.getDuration()}"></td>
-                <td th:text="${flight.getArrival()}"></td>
+            <tr th:each="flightDto: ${flightDtos}">
+                <td><a th:href="@{/flight-info/{flightId}(flightId=${flightDto.getId()})}" th:methods="GET" th:text="${flightDto.getFlightNum()}"/></td>
+                <td th:text="${flightDto.getDeparture()}"></td>
+                <td th:text="${flightDto.getDuration()}"></td>
+                <td th:text="${flightDto.getArrival()}"></td>
 <!--                <td>Info</a></td>-->
             </tr>
         </table>
     </div>
-    <div th:if="${flights.isEmpty()}">
-        You don't have any flights
+    <div th:if="${flightDtos.isEmpty()}">
+        You don't have any flightDtos
     </div>
 </div>
 
