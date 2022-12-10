@@ -25,25 +25,17 @@ import java.util.List;
 @Slf4j
 @Scope("session")
 @AllArgsConstructor
+/**
+ * It's a controller that handles all the requests related to user authentication
+ */
 public class AuthController {
 
     private final UserService userService;
-
-//    @Autowired
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
 
     @Autowired
     SessionContext sessionContext;
-
-//    public AuthController(UserService userService) {
-//        this.userService = userService;
-//    }
-
-    @GetMapping("/registration")
-    public String index(){
-        return "index_registration";
-    }
 
     @GetMapping("/login")
     public String login(){

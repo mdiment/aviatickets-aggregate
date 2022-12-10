@@ -24,8 +24,8 @@
         <li class="nav-item">
           <table>
             <tr>
-              <td><a class="nav-link active" aria-current="page" th:href="@{/register}">Register</a></td>
-              <td><a class="nav-link active" aria-current="page" th:href="@{/login}">Login</a></td>
+              <td><a class="nav-link active" aria-current="page" th:href="@{/register}">Зарегистрироваться</a></td>
+              <td><a class="nav-link active" aria-current="page" th:href="@{/login}">Войти</a></td>
             </tr>
           </table>
         </li>
@@ -39,15 +39,15 @@
     <div class="col-md-6 offset-md-3">
 
       <div th:if="${param.error}">
-        <div class="alert alert-danger">Invalid Email or Password</div>
+        <div class="alert alert-danger">Неправильный пароль или логин!</div>
       </div>
       <div th:if="${param.logout}">
-        <div class="alert alert-success"> You have been logged out.</div>
+        <div class="alert alert-success">Вы успешно вышли из аккаунта</div>
       </div>
 
       <div class="card">
         <div class="card-header">
-          <h2 class="text-center">Login Form</h2>
+          <h2 class="text-center">Войти</h2>
         </div>
         <div class="card-body">
           <form
@@ -63,25 +63,23 @@
                       id="username"
                       name="username"
                       class="form-control"
-                      placeholder="Enter email address"
+                      placeholder="Введите ваш email"
               />
             </div>
 
             <div class="form-group mb-3">
-              <label class="control-label"> Password</label>
+              <label class="control-label">Пароль</label>
               <input
                       type="password"
                       id="password"
                       name="password"
                       class="form-control"
-                      placeholder="Enter password"
+                      placeholder="Введите ваш пароль"
               />
             </div>
             <div class="form-group mb-3">
-              <button type="submit" class="btn btn-primary" >Submit</button>
-              <span> Not registered ?
-                                <a th:href="@{/register}">Register/Signup here</a>
-                            </span>
+              <button type="submit" class="btn btn-primary" >Войти</button>
+              <span>   <a th:href="@{/register}">Не зарегистрированы? </a></span>
             </div>
           </form>
         </div>
@@ -89,5 +87,10 @@
     </div>
   </div>
 </div>
+<footer class="bg-light text-center text-lg-start fixed-bottom">
+  <div class="card-footer text-muted">
+    2022 © Диментман М. (ИУ6-51Б)
+  </div>
+</footer>
 </body>
 </html>

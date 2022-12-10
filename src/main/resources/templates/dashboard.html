@@ -18,17 +18,32 @@
                 <li class="nav-item">
                     <table>
                         <tr>
-                            <td><a class="nav-link active" aria-current="page" th:href="@{/login}">SignUp</a></td>
-                            <td th:if="${user}"><a class="nav-link active" aria-current="page" th:href="@{/logout}">Logout</a></td>
+                            <td><a class="nav-link active"
+                                   aria-current="page"
+                                   th:href="@{/login}">Войти</a>
+                            </td>
+                            <td th:if="${user}">
+                                <a class="nav-link active"
+                                   aria-current="page"
+                                   th:href="@{/logout}">Выйти из профиля</a>
+                            </td>
+                            <td th:if="${user}">
+                                <a class="nav-link active"
+                                   aria-current="page"
+                                   th:href="@{/login}">Войти в другой профиль</a>
+                            </td>
                         </tr>
                     </table>
                 </li>
             </ul>
         </div>
         <span class="navbar-text" th:if="${user}">
-            <span>Hello, <a th:href="@{/personal}" th:methods="POST" th:text="${user.getEmail()}"/>!</span>
-        </span>
-        <span class="navbar-text" th:if="${user == null}">Hello!</span>
+                <span>Здравствуйте, <a th:href="@{/personal}"
+                                       th:methods="POST"
+                                       th:text="${user.getEmail()}"></a>!
+                </span>
+            </span>
+        <span class="navbar-text" th:if="${user == null}">Здравствуйте!</span>
     </div>
 </nav>
 <br/>
@@ -67,5 +82,10 @@
     </div>
 </div>
 
+<footer class="bg-light text-center text-lg-start fixed-bottom">
+    <div class="card-footer text-muted">
+        2022 © Диментман М. (ИУ6-51Б)
+    </div>
+</footer>
 </body>
 </html>

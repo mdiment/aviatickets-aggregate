@@ -39,7 +39,7 @@ public class SpringSecurity {
                 .and()
                 .formLogin(
                         form -> form
-                                .loginPage("/login.html")
+                                .loginPage("/login")
                                 .loginProcessingUrl("/login")
                                 .failureUrl("/login?error")
                                 .successHandler(myAuthenticationSuccessHandler())

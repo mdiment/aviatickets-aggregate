@@ -6,74 +6,111 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
           rel="stylesheet">
 </head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/}">Aviatickets</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <table>
-                        <tr>
-                            <td><a class="nav-link active" aria-current="page" th:href="@{/login}">SignUp</a></td>
-                            <td th:if="${user}"><a class="nav-link active" aria-current="page" th:href="@{/logout}">Logout</a></td>
-                        </tr>
-                    </table>
-                </li>
-            </ul>
+<body class="d-flex flex-column min-vw-500">
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/}">Aviatickets</a>
+            <button class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <table>
+                            <tr>
+                                <td th:if="${user == null}"><a class="nav-link active"
+                                       aria-current="page"
+                                       th:href="@{/login}">Войти</a>
+                                </td>
+                                <td th:if="${user}">
+                                    <a class="nav-link active"
+                                       aria-current="page"
+                                       th:href="@{/logout}">Выйти из профиля</a>
+                                </td>
+                                <td th:if="${user}">
+                                    <a class="nav-link active"
+                                       aria-current="page"
+                                       th:href="@{/login}">Войти в другой профиль</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </li>
+                </ul>
+            </div>
+            <span class="navbar-text" th:if="${user}">
+                <span>Здравствуйте, <a th:href="@{/personal}"
+                                       th:methods="POST"
+                                       th:text="${user.getEmail()}"></a>!
+                </span>
+            </span>
+            <span class="navbar-text" th:if="${user == null}">Здравствуйте!</span>
         </div>
-        <span class="navbar-text" th:if="${user}">
-            <span>Hello, <a th:href="@{/personal}" th:methods="POST" th:text="${user.getEmail()}"/>!</span>
-        </span>
-        <span class="navbar-text" th:if="${user == null}">Hello!</span>
-    </div>
-</nav>
+    </nav>
+</header>
 <br/>
-<div class="container">
-    <div align="left">
-        <form action="#" th:action="@{flights}" th:object="${searchDto}" method="post">
-            <table>
+<content class="min-vh-500">
+    <div class="container">
+        <div align="left">
+            <form action="#" th:action="@{flights}" th:object="${searchDto}" method="post">
+                <table>
+                    <tr>
+                        <td>Город отправки:<input type="text" th:field="*{from}"/></td>
+                        <td>Город прибытия:<input type="text" th:field="*{to}"/></td>
+                    </tr>
+                    <tr>
+                        <td>Время отправления:<input type="date" th:field="*{date}"/></td>
+                    </tr>
+                    <tr>
+                        <td><input type="submit" value="Найти" /></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+
+    <div class="container" th:if="${flightDtos != null}">
+        <div align="center" th:if="${not flightDtos.isEmpty()}">
+            <h1>Найденные перелёты:</h1>
+            <table class="table table-striped">
                 <tr>
-                    <td>From:<input type="text" th:field="*{from}"/></td>
-                    <td>To:<input type="text" th:field="*{to}"/></td>
+                    <th scope="col">Номер рейса</th>
+                    <th scope="col">Время отправки</th>
+                    <th scope="col">Продолжительность полёта</th>
+                    <th scope="col">Время прибытия</th>
                 </tr>
-                <tr>
-                    <td>Departure date:<input type="date" th:field="*{date}"/></td>
-                </tr>
-                <tr>
-                    <td><input type="submit" value="Find" /></td>
+                <tr th:each="flightDto: ${flightDtos}">
+                    <td><a th:href="@{/flight-info/{flightId}(flightId=${flightDto.getId()})}"
+                           th:methods="GET"
+                           th:text="${flightDto.getFlightNum()}"/>
+                    </td>
+                    <td th:text="${flightDto.getDeparture()}"></td>
+                    <td th:text="${flightDto.getDuration()}"></td>
+                    <td th:text="${flightDto.getArrival()}"></td>
                 </tr>
             </table>
-        </form>
+        </div>
+        <div th:if="${flightDtos.isEmpty()}">
+            По вашему запросу ничего не найдено! Попробуйте изменить параметры поиска!
+        </div>
     </div>
-</div>
-
-<div class="container" th:if="${flightDtos != null}">
-    <div align="center" th:if="${not flightDtos.isEmpty()}">
-        <h1>Flights Found:</h1>
-        <table class="table table-striped">
-            <tr>
-                <th scope="col">flightDto num</th>
-                <th scope="col">departure time</th>
-                <th scope="col">duration</th>
-                <th scope="col">arrival time</th>
-            </tr>
-            <tr th:each="flightDto: ${flightDtos}">
-                <td><a th:href="@{/flight-info/{flightId}(flightId=${flightDto.getId()})}" th:methods="GET" th:text="${flightDto.getFlightNum()}"/></td>
-                <td th:text="${flightDto.getDeparture()}"></td>
-                <td th:text="${flightDto.getDuration()}"></td>
-                <td th:text="${flightDto.getArrival()}"></td>
-<!--                <td>Info</a></td>-->
-            </tr>
-        </table>
+    <br/>
+    <div align="container" th:if="${searchDto.getFrom() == null}">
+        <div class="col-md-12 px-10" style="padding-left: 10px;  padding-right: 10px;">
+            <img th:src="index.jpg" class="img-fluid">
+        </div>
     </div>
-    <div th:if="${flightDtos.isEmpty()}">
-        You don't have any flightDtos
+</content>
+<footer class="bg-light text-center text-lg-start fixed-bottom">
+    <div class="card-footer text-muted">
+        2022 © Диментман М. (ИУ6-51Б)
     </div>
-</div>
-
+</footer>
 </body>
 </html>

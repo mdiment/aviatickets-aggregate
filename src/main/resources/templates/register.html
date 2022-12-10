@@ -22,8 +22,8 @@
                 <li class="nav-item">
                     <table>
                         <tr>
-                            <td><a class="nav-link active" aria-current="page" th:href="@{/register}">Register</a></td>
-                            <td><a class="nav-link active" aria-current="page" th:href="@{/login}">Login</a></td>
+                            <td><a class="nav-link active" aria-current="page" th:href="@{/register}">Зарегистрирваться</a></td>
+                            <td><a class="nav-link active" aria-current="page" th:href="@{/login}">Войти</a></td>
                         </tr>
                     </table>
                 </li>
@@ -36,16 +36,16 @@
     <div class="row col-md-8 offset-md-2">
         <div class="card">
             <div class="card-header">
-                <h2 class="text-center">Registration</h2>
+                <h2 class="text-center">Регистрация</h2>
             </div>
             <div th:if="${param.success}">
                 <div class="alert alert-info">
-                    You have successfully registered aviatickets app!
+                    Вы успешно зарегистрировались!
                 </div>
             </div>
             <div th:if="${param.error}">
                 <div class="alert alert-danger">
-                    Incorrect email!
+                    Некорректный email!
                 </div>
             </div>
             <div class="card-body">
@@ -55,14 +55,13 @@
                         th:action="@{/register/save}"
                         th:object="${user}"
                 >
-
                     <div class="form-group mb-3">
                         <label class="form-label">Email</label>
                         <input
                                 class="form-control"
                                 id="email"
                                 name="email"
-                                placeholder="Enter email address"
+                                placeholder="Введите email"
                                 th:field="*{email}"
                         />
                         <p th:errors = "*{email}" class="text-danger"
@@ -70,12 +69,12 @@
                     </div>
 
                     <div class="form-group mb-3">
-                        <label class="form-label">Password</label>
+                        <label class="form-label">Пароль</label>
                         <input
                                 class="form-control"
                                 id="password"
                                 name="password"
-                                placeholder="Enter password"
+                                placeholder="Введите пароль"
                                 th:field="*{password}"
                                 type="password"
                         />
@@ -83,13 +82,18 @@
                            th:if="${#fields.hasErrors('password')}"></p>
                     </div>
                     <div class="form-group">
-                        <button class="btn btn-primary" type="submit">Register</button>
-                        <span>Already registered? <a th:href="@{/login}">Login here</a></span>
+                        <button class="btn btn-primary" type="submit">Регстрация</button>
+                        <span>   <a th:href="@{/login}">Уже зарегистрированы?</a></span>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+<footer class="bg-light text-center text-lg-start fixed-bottom">
+    <div class="card-footer text-muted">
+        2022 © Диментман М. (ИУ6-51Б)
+    </div>
+</footer>
 </body>
 </html>

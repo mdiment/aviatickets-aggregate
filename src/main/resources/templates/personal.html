@@ -19,29 +19,42 @@
                 <li class="nav-item">
                     <table>
                         <tr>
-                            <td><a class="nav-link active" aria-current="page" th:href="@{/login}">SignUp</a></td>
-                            <td th:if="${user}"><a class="nav-link active" aria-current="page" th:href="@{/logout}">Logout</a></td>
-                        </tr>
+                            <td><a class="nav-link active"
+                                   aria-current="page"
+                                   th:href="@{/login}">Войти</a>
+                            </td>
+                            <td th:if="${user}">
+                                <a class="nav-link active"
+                                   aria-current="page"
+                                   th:href="@{/logout}">Выйти из профиля</a>
+                            </td>
+                            <td th:if="${user}">
+                                <a class="nav-link active"
+                                   aria-current="page"
+                                   th:href="@{/login}">Войти в другой профиль</a>
+                            </td></tr>
                     </table>
                 </li>
             </ul>
         </div>
         <span class="navbar-text" th:if="${user}">
-            <span>Hello, <a th:href="@{/personal}" th:methods="POST" th:text="${user.getEmail()}"/>!</span>
-        </span>
-        <span class="navbar-text" th:if="${user == null}">Hello!</span>
+                <span>Здравствуйте, <a th:href="@{/personal}"
+                                       th:methods="POST"
+                                       th:text="${user.getEmail()}"></a>!
+                </span>
+            </span>
+        <span class="navbar-text" th:if="${user == null}">Здравствуйте!</span>
     </div>
 </nav>
 <br/>
 <div class="container" th:if="${orders != null}">
     <div align="center" th:if="${not orders.isEmpty()}">
-        <h1>Your bookings:</h1>
+        <h1>Ваши бронирования:</h1>
         <table class="table">
             <tr>
-                <th scope="col">Book number</th>
-                <th scope="col">Date of booking</th>
-                <th scope="col">Total sum of booking</th>
-                <th scope="col">Remove booking</th>
+                <th scope="col">Номер бронирования</th>
+                <th scope="col">Дата бронирования</th>
+                <th scope="col">Общая сумма бронирования</th>
             </tr>
             <tr th:each="order: ${orders}">
                 <td th:text="${order.getBookRef()}"></td>
@@ -52,12 +65,15 @@
         </table>
     </div>
     <div align="center" th:if="${orders.isEmpty()}">
-        No orders found! You should book some!
+        Бронирования не найдены! Вам следует что-то забронировать!
     </div>
-    <a th::href="@{/}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">New booking</a>
+    <br/>
+    <a th:href="@{/}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Новое бронирование</a>
 </div>
-<div th:if="${orders == null}">
-    ERROR
-</div>
+<footer class="bg-light text-center text-lg-start fixed-bottom">
+    <div class="card-footer text-muted">
+        2022 © Диментман М. (ИУ6-51Б)
+    </div>
+</footer>
 </body>
 </html>

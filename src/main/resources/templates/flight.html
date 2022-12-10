@@ -18,34 +18,48 @@
                 <li class="nav-item">
                     <table>
                         <tr>
-                            <td><a class="nav-link active" aria-current="page" th:href="@{/login}">SignUp</a></td>
-                            <td th:if="${user}"><a class="nav-link active" aria-current="page" th:href="@{/logout}">Logout</a></td>
-                        </tr>
+                            <td><a class="nav-link active"
+                                   aria-current="page"
+                                   th:href="@{/login}">Войти</a>
+                            </td>
+                            <td th:if="${user}">
+                                <a class="nav-link active"
+                                   aria-current="page"
+                                   th:href="@{/logout}">Выйти из профиля</a>
+                            </td>
+                            <td th:if="${user}">
+                                <a class="nav-link active"
+                                   aria-current="page"
+                                   th:href="@{/login}">Войти в другой профиль</a>
+                            </td></tr>
                     </table>
                 </li>
             </ul>
         </div>
         <span class="navbar-text" th:if="${user}">
-            <span>Hello, <a th:href="@{/personal}" th:methods="POST" th:text="${user.getEmail()}"/>!</span>
-        </span>
-        <span class="navbar-text" th:if="${user == null}">Hello!</span>
+                <span>Здравствуйте, <a th:href="@{/personal}"
+                                       th:methods="POST"
+                                       th:text="${user.getEmail()}"></a>!
+                </span>
+            </span>
+        <span class="navbar-text" th:if="${user == null}">Здравствуйте!</span>
     </div>
 </nav>
 <br/>
 <div th:if="${param.error}">
-    <div class="alert alert-info">Too many bookings for one user!</div>
+    <div class="alert alert-info">Слишком много бронирований для одного пользователя!</div>
 </div>
 <br/>
 <div class="container" th:if="${flightInfo != null}">
     <div align="left" th:if="${flightInfo.getModel() != null}">
-        <span>Model of the plane: <span th:text="${flightInfo.getModel()}"></span></span>
+        <span>Модель самолёта: <span th:text="${flightInfo.getModel()}"></span></span>
     </div>
     <div align="center" th:if="${not flightInfo.getTicketDtos().isEmpty()}">
-        <h1>Tickets found:</h1>
+        <h1>Доступные билеты для бронирования:</h1>
         <table class="table">
             <tr>
-                <th scope="col">Fare Conditions</th>
-                <th scope="col">Available tickets</th>
+                <th scope="col">Класс</th>
+                <th scope="col">Количество доступных билетов</th>
             </tr>
             <tr th:each="ticketDto: ${flightInfo.getTicketDtos()}">
                 <td><a th:href="@{/order/{flightId}/{fareConditions}(flightId=${flightInfo.getFlightId()},fareConditions=${ticketDto.getFareConditions()})}"
@@ -58,12 +72,14 @@
         </table>
     </div>
     <div align="center" th:if="${flightInfo.getTicketDtos.isEmpty()}">
-        No available tickets found!
+        Нет доступных билетов на этот рейс!
     </div>
 </div>
-<div th:if="${flightInfo == null}">
-    ERROR
-</div>
 
+<footer class="bg-light text-center text-lg-start fixed-bottom">
+    <div class="card-footer text-muted">
+        2022 © Диментман М. (ИУ6-51Б)
+    </div>
+</footer>
 </body>
 </html>
