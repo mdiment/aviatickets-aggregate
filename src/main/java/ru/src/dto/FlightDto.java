@@ -13,8 +13,8 @@ public class FlightDto {
 
     private Integer id;
     private String flightNum;
-    private Timestamp arrival;
-    private Timestamp departure;
+    private String arrival;
+    private String departure;
     private String duration;
 
 }

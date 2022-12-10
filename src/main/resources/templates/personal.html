@@ -19,7 +19,8 @@
                 <li class="nav-item">
                     <table>
                         <tr>
-                            <td><a class="nav-link active"
+                            <td th:if="${user == null}">
+                                <a class="nav-link active"
                                    aria-current="page"
                                    th:href="@{/login}">Войти</a>
                             </td>
@@ -53,13 +54,19 @@
         <table class="table">
             <tr>
                 <th scope="col">Номер бронирования</th>
-                <th scope="col">Дата бронирования</th>
+                <th scope="col">Аэропорт вылета</th>
+                <th scope="col">Время вылета</th>
+                <th scope="col">Время прилёта</th>
+                <th scope="col">Аэропорт прилёта</th>
                 <th scope="col">Общая сумма бронирования</th>
             </tr>
             <tr th:each="order: ${orders}">
                 <td th:text="${order.getBookRef()}"></td>
-                <td th:text="${order.getBook_date()}"></td>
-                <td th:text="${order.getTotal_amount()}"></td>
+                <td th:text="${order.getDepAirport()}"></td>
+                <td th:text="${order.getDepTime()}"></td>
+                <td th:text="${order.getArrTime()}"></td>
+                <td th:text="${order.getArrAirport()}"></td>
+                <td th:text="${order.getTotalAmount()}"></td>
                 <td><a th:href="@{/personal/delete/{bookRef}(bookRef=${order.getBookRef()})}" th:methods="DELETE" class="text-danger">X</a></td>
             </tr>
         </table>

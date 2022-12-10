@@ -17,10 +17,12 @@ import ru.src.model.repository.FlightRepository;
 import ru.src.model.repository.UserRepository;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.*;
 
 import static java.lang.Integer.parseInt;
+import static ru.src.util.DateUtils.DATE_FORMAT;
 
 @Slf4j
 @Repository
@@ -86,10 +88,10 @@ public class FlightDaoImpl implements FlightDao {
             flightDto.setFlightNum(flightNum);
 
             Timestamp arrival = (Timestamp) row.get("scheduled_arrival");
-            flightDto.setArrival(arrival);
+            flightDto.setArrival(DATE_FORMAT.format(arrival));
 
             Timestamp departure = (Timestamp) row.get("scheduled_departure");
-            flightDto.setDeparture(departure);
+            flightDto.setDeparture(DATE_FORMAT.format(departure));
 
             String duration = row.get("scheduled_duration").toString();
             flightDto.setDuration(duration);
@@ -138,15 +140,7 @@ public class FlightDaoImpl implements FlightDao {
         booking.setBookRef(UUID.randomUUID().toString().substring(0, 6).toUpperCase());
         booking.setTotal_amount(Objects.equals(fareConditions, "Economy") ? 3000.00 : 18000.00);
         booking.setUser(user);
-//        Map<String, Object> params_ticket = new HashMap<>();
-//        params_ticket.put("flightId", flightId);
         Optional<Flight> flight = flightRepository.findById(Long.valueOf(flightId));
-//                jdbcOperations.queryForObject("select flight_id, flight_no, scheduled_departure, scheduled_arrival, departure_airport, arrival_airport, status, aircraft_code, actual_departure, actual_arrival\n" +
-//                "\tFROM bookings.flights \n" +
-//                "where flight_id = :flightId",
-//                params_ticket,
-//                Flight.class
-//        );
         Ticket ticket = new Ticket(
                 UUID.randomUUID().toString().substring(0, 13).toUpperCase(),
                 user.getId().toString(),
@@ -156,29 +150,7 @@ public class FlightDaoImpl implements FlightDao {
                 flight.get()
         );
         booking.getTickets().add(ticket);
-//        double amount = ;
-//        Booking booking = new Booking(book_ref,
-//                ,
-//                amount,
-//                user,
-//                List.of(ticket));
         user.getBookings().add(booking);
         userRepository.saveAndFlush(user);
-//        bookingRepository.save(booking);
-//        Map<String, Object> params_ticket = new HashMap<>();
-//        String ticket_no = UUID.randomUUID().toString().substring(0, 13).toUpperCase();
-//        params_ticket.put("ticket_no", ticket_no);
-//        params_ticket.put("book_ref", book_ref);
-//        params_ticket.put("passenger_id", user.getId());
-//        params_ticket.put("passenger_name", user.getEmail());
-//        jdbcOperations.update("INSERT INTO bookings.tickets (ticket_no, book_ref, passenger_id, passenger_name)\n" +
-//                "VALUES(:ticket_no, :book_ref, :passenger_id, :passenger_name);",
-//                params_ticket);
-//        params_ticket.put("flight_id", flightId);
-//        params_ticket.put("fare_conditions", fareConditions);
-//        params_ticket.put("amount", amount);
-//        jdbcOperations.update("INSERT INTO ticket_flights (ticket_no, flight_id, fare_conditions, amount)\n" +
-//                        "        VALUES      (:ticket_no, :flight_id, :fare_conditions, :amount);",
-//                params_ticket);
     }
 }

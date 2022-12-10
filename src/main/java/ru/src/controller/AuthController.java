@@ -4,13 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.src.configuration.SessionContext;
+import ru.src.dto.OrderDto;
 import ru.src.dto.UserDto;
 import ru.src.model.entity.Booking;
+import ru.src.model.entity.Ticket;
 import ru.src.model.entity.User;
 import ru.src.model.repository.BookingRepository;
 import ru.src.model.repository.UserRepository;
@@ -18,8 +21,12 @@ import ru.src.service.UserService;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import static ru.src.util.DateUtils.DATE_FORMAT;
 
 @Controller(value = "registration")
 @Slf4j
@@ -86,6 +93,25 @@ public class AuthController {
         }
         model.addAttribute("user", sessionContext.getUser());
         model.addAttribute("orders", sessionContext.getUser().getBookings());
+        List<Booking> bookings = new ArrayList<>(sessionContext.getUser().getBookings());
+        List<OrderDto> orders = new ArrayList<>();
+        for(Booking booking: bookings){
+            log.info(DATE_FORMAT.format(booking.getBook_date()));
+        }
+        for(Booking booking: sessionContext.getUser().getBookings()){
+            OrderDto orderDto = new OrderDto();
+            orderDto.setBookRef(booking.getBookRef());
+            orderDto.setTotalAmount(booking.getTotal_amount());
+            for(Ticket ticket : booking.getTickets()){
+//                Ticket ticketForOrder = new Ticket();
+                orderDto.setDepAirport(ticket.getFlight().getDeparture_airport());
+                orderDto.setArrAirport(ticket.getFlight().getArrival_airport());
+                orderDto.setDepTime(DATE_FORMAT.format(Timestamp.valueOf(ticket.getFlight().getScheduledDeparture().toLocalDateTime())));
+                orderDto.setArrTime(DATE_FORMAT.format(Timestamp.valueOf(ticket.getFlight().getScheduled_arrival().toLocalDateTime())));
+            }
+            orders.add(orderDto);
+        }
+        model.addAttribute("orders", orders);
         return "personal";
     }
 
@@ -98,19 +124,33 @@ public class AuthController {
         if (user == null){
             return "redirect:/";
         }
-        Booking booking = bookingRepository.findByBookRef(bookRef);
+        Booking bookingToDelete = bookingRepository.findByBookRef(bookRef);
         User user1 = bookingRepository.findByBookRef(bookRef).getUser();
-        boolean test = user1.equals(user);
 
-        if(test){
-            user1.getBookings().remove(booking);
+        if(user1.equals(user)){
+            user1.getBookings().remove(bookingToDelete);
             userRepository.saveAndFlush(user1);
-            bookingRepository.delete(booking);
+            bookingRepository.delete(bookingToDelete);
             sessionContext.setUser(user1);
         }
 
+        List<OrderDto> orders = new ArrayList<>();
+        for(Booking booking: user1.getBookings()){
+            OrderDto orderDto = new OrderDto();
+            orderDto.setBookRef(booking.getBookRef());
+            orderDto.setTotalAmount(booking.getTotal_amount());
+            for(Ticket ticket : booking.getTickets()){
+//                Ticket ticketForOrder = new Ticket();
+                orderDto.setDepAirport(ticket.getFlight().getDeparture_airport());
+                orderDto.setArrAirport(ticket.getFlight().getArrival_airport());
+                orderDto.setDepTime(DATE_FORMAT.format(Timestamp.valueOf(ticket.getFlight().getScheduledDeparture().toLocalDateTime())));
+                orderDto.setArrTime(DATE_FORMAT.format(Timestamp.valueOf(ticket.getFlight().getScheduled_arrival().toLocalDateTime())));
+            }
+            orders.add(orderDto);
+        }
+
         model.addAttribute("user", user1);
-        model.addAttribute("orders", user1.getBookings());
+        model.addAttribute("orders", orders);
         return "personal";
     }
 }

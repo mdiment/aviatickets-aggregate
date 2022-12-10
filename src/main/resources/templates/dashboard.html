@@ -18,9 +18,9 @@
                 <li class="nav-item">
                     <table>
                         <tr>
-                            <td><a class="nav-link active"
-                                   aria-current="page"
-                                   th:href="@{/login}">Войти</a>
+                            <td th:if="${user == null}"><a class="nav-link active"
+                                                           aria-current="page"
+                                                           th:href="@{/login}">Войти</a>
                             </td>
                             <td th:if="${user}">
                                 <a class="nav-link active"
@@ -49,36 +49,37 @@
 <br/>
 <div class="container" th:if="${statistics != null}">
     <div align="center" th:if="${not statistics.isEmpty()}">
-        <h1>Aviatickets Statistics:</h1>
+        <h1>Статистические данные для приложения Aviatickets:</h1>
         <div>
-            <p class="fs-3 text">Users summary: <span class="fw-bold" th:text="${statistics.size()}"></span></p>
+            <p class="fs-3 text">Всего пользователей: <span class="fw-bold" th:text="${statistics.size()}"></span></p>
         </div>
         <table class="table table-striped">
             <tr>
-                <th scope="col">User</th>
-                <th scope="col">User roles</th>
-                <th scope="col">User bookings</th>
+                <th scope="col">Имя пользователя</th>
+                <th scope="col">Список ролей пользователя</th>
+                <th scope="col">Бронирования пользователя</th>
             </tr>
             <tr th:each="row : ${statistics}">
                 <td><a th:href="@{/}" th:methods="GET" th:text="${row.getUser().getEmail()}"/></td>
                 <td th:text="${row.getRoles()}"></td>
                 <td>
-                    <table class="table table-bordered">
+                    <table th:if="${not row.getBookings().isEmpty()}" class="table table-bordered">
                         <tr>
-                            <th>Booking</th>
-                            <th>Booking date</th>
+                            <th>Номер бронирования</th>
+                            <th>Время бронирования</th>
                         </tr>
                         <tr th:each="booking : ${row.getBookings()}">
                             <td th:text="${booking.getBookRef()}"></td>
                             <td th:text="${booking.getBook_date()}"></td>
                         </tr>
                     </table>
+                    <span th:if="${row.getBookings().isEmpty()}">У пользователя нет бронирований</span>
                 </td>
             </tr>
         </table>
     </div>
     <div th:if="${statistics.isEmpty()}">
-        DB problem
+        Проблема с БД!
     </div>
 </div>
 
