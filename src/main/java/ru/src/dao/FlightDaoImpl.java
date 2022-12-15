@@ -12,12 +12,10 @@ import ru.src.model.entity.Booking;
 import ru.src.model.entity.Flight;
 import ru.src.model.entity.Ticket;
 import ru.src.model.entity.User;
-import ru.src.model.repository.BookingRepository;
 import ru.src.model.repository.FlightRepository;
 import ru.src.model.repository.UserRepository;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.*;
 
