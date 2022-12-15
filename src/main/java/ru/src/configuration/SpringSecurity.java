@@ -30,12 +30,9 @@ public class SpringSecurity {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/register/**").permitAll()
-                .antMatchers("/index").permitAll()
                 .antMatchers("/personal/**").authenticated()
-                .antMatchers("/order/**").permitAll()
-                .antMatchers("/flights/**").permitAll()
-                .antMatchers("/flight-info/**").permitAll()
+                .antMatchers("/order/**").authenticated()
+                .antMatchers("/dashboard").hasRole("ADMIN")
                 .and()
                 .formLogin(
                         form -> form

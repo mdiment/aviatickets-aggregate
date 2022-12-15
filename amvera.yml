@@ -1,0 +1,9 @@
+meta:
+  environment: jvm
+  toolchain:
+    name: gradle
+    version: 17
+
+run:
+  jarName: aviatickets.jar
+  containerPort: 8080
