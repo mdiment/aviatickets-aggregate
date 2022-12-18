@@ -10,6 +10,7 @@ import ru.src.dto.SearchDto;
 import ru.src.model.entity.User;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -21,8 +22,8 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public List<FlightDto> getFlights(SearchDto searchDto) {
-        if (searchDto.getDate() == null || searchDto.getDate().isBlank()){
-            searchDto.setDate(LocalDate.now().toString());
+        if (searchDto.getDate() == null){
+            searchDto.setDate(LocalDateTime.now());
         }
         return flightDao.getFlights(searchDto);
     }

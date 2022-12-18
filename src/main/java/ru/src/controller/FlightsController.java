@@ -11,6 +11,7 @@ import ru.src.dto.FlightInfo;
 import ru.src.dto.SearchDto;
 import ru.src.service.FlightService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -34,7 +35,7 @@ public class FlightsController {
     }
 
     @PostMapping("/flights")
-    public ModelAndView getFlights(@ModelAttribute("flight") SearchDto searchDto) {
+    public ModelAndView getFlights(@ModelAttribute("flight") @Valid SearchDto searchDto) {
         ModelAndView modelAndView = new ModelAndView("index_aviatickets");
         List<FlightDto> flightDtos = flightService.getFlights(searchDto);
         modelAndView.addObject("searchDto", searchDto);

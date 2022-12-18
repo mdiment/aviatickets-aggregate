@@ -16,6 +16,7 @@ import ru.src.model.repository.FlightRepository;
 import ru.src.model.repository.UserRepository;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -35,7 +36,7 @@ public class FlightDaoImpl implements FlightDao {
                     "from bookings.flights_v \n" +
                     "where departure_city = :from \n" +
                     "   and arrival_city = :to \n" +
-                    "   and scheduled_departure::date >= :searchDate::date\n" +
+                    "   and scheduled_departure >= :searchDate\n" +
                     "   and status = 'Scheduled' \n" +
                     "order by scheduled_departure ASC, \n" +
                     "   scheduled_arrival desc, \n" +
@@ -145,7 +146,7 @@ public class FlightDaoImpl implements FlightDao {
                 user.getEmail(),
                 fareConditions,
                 booking,
-                flight.get()
+                flight.orElse(null)
         );
         booking.getTickets().add(ticket);
         user.getBookings().add(booking);

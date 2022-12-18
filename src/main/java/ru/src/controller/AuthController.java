@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,15 +14,12 @@ import ru.src.dto.UserDto;
 import ru.src.model.entity.Booking;
 import ru.src.model.entity.Ticket;
 import ru.src.model.entity.User;
-import ru.src.model.repository.BookingRepository;
-import ru.src.model.repository.UserRepository;
+import ru.src.service.AuthService;
 import ru.src.service.UserService;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import static ru.src.util.DateUtils.DATE_FORMAT;
@@ -38,9 +34,8 @@ import static ru.src.util.DateUtils.DATE_FORMAT;
 public class AuthController {
 
     private final UserService userService;
-    private final BookingRepository bookingRepository;
-    private final UserRepository userRepository;
 
+    private final AuthService ticketService;
     @Autowired
     SessionContext sessionContext;
 
@@ -115,32 +110,18 @@ public class AuthController {
         return "personal";
     }
 
-    @Transactional
-    @RequestMapping("/personal/delete/{bookRef}")
-    public String deleteOrder(@PathVariable String bookRef,
-                        Model model){
-        log.info("delete bookRef: " + bookRef);
-        User user = sessionContext.getUser();
-        if (user == null){
-            return "redirect:/";
-        }
-        Booking bookingToDelete = bookingRepository.findByBookRef(bookRef);
-        User user1 = bookingRepository.findByBookRef(bookRef).getUser();
-
-        if(user1.equals(user)){
-            user1.getBookings().remove(bookingToDelete);
-            userRepository.saveAndFlush(user1);
-            bookingRepository.delete(bookingToDelete);
-            sessionContext.setUser(user1);
-        }
-
+    /**
+     *
+     * @param user пользователь, по которому делается выборка бронирований
+     * @return список бронирований, форматированный для представления
+     */
+    private List<OrderDto> listOrders(User user){
         List<OrderDto> orders = new ArrayList<>();
-        for(Booking booking: user1.getBookings()){
+        for(Booking booking: user.getBookings()){
             OrderDto orderDto = new OrderDto();
             orderDto.setBookRef(booking.getBookRef());
             orderDto.setTotalAmount(booking.getTotal_amount());
             for(Ticket ticket : booking.getTickets()){
-//                Ticket ticketForOrder = new Ticket();
                 orderDto.setDepAirport(ticket.getFlight().getDeparture_airport());
                 orderDto.setArrAirport(ticket.getFlight().getArrival_airport());
                 orderDto.setDepTime(DATE_FORMAT.format(Timestamp.valueOf(ticket.getFlight().getScheduledDeparture().toLocalDateTime())));
@@ -148,9 +129,24 @@ public class AuthController {
             }
             orders.add(orderDto);
         }
-
-        model.addAttribute("user", user1);
-        model.addAttribute("orders", orders);
+        return orders;
+    }
+    /**
+     * @param bookRef бронирование для удаления
+     * @param model интерфейс для передачи данных между представлениями
+     * @return String имя представления для отображения
+     */
+    @RequestMapping("/personal/delete/{bookRef}")
+    public String deleteOrder(@PathVariable String bookRef,
+                        Model model){
+        // логирование
+        log.info("delete bookRef: " + bookRef);
+        // попытка удаления бронирования пользователем
+        sessionContext.setUser(ticketService.deleteOrderFromUser(sessionContext.getUser(), bookRef));
+        // наполнение ответа атрибутами, использующимися на стороне представления
+        model.addAttribute("user", sessionContext.getUser());
+        model.addAttribute("orders", listOrders(sessionContext.getUser()));
+        // передача имени представления для ответа
         return "personal";
     }
 }
